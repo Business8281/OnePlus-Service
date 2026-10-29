@@ -98,10 +98,8 @@ export default function DeviceShowcase({ onSelectDevice }: DeviceShowcaseProps) 
             className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-700 ease-out"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 group-hover:via-black/50 transition-all duration-300" />
-
           <div className="relative z-10">
-            <h3 className="text-xl sm:text-3xl font-black text-white tracking-tight leading-tight drop-shadow-md">
+            <h3 className="text-xl sm:text-3xl font-black text-white tracking-tight leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
               Flagships
             </h3>
           </div>
@@ -142,10 +140,8 @@ export default function DeviceShowcase({ onSelectDevice }: DeviceShowcaseProps) 
               className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-700 ease-out"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 group-hover:via-black/50 transition-all duration-300" />
-
             <div className="relative z-10">
-              <h3 className="text-sm sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-tight drop-shadow-md">
+              <h3 className="text-sm sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                 {device.name}
               </h3>
             </div>
@@ -171,10 +167,8 @@ export default function DeviceShowcase({ onSelectDevice }: DeviceShowcaseProps) 
                 className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-700 ease-out"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 group-hover:via-black/50 transition-all duration-300" />
-
               <div className="relative z-10">
-                <h3 className="text-xs sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-tight drop-shadow-md">
+                <h3 className="text-xs sm:text-2xl lg:text-3xl font-black text-white tracking-tight leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                   {device.name}
                 </h3>
               </div>
