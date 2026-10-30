@@ -694,7 +694,7 @@ export default function ExpressBooking({
               </form>
 
               {/* Live Service Pass Card (5 Cols) */}
-              <div className="lg:col-span-5 p-6 sm:p-7 rounded-[4px] bg-zinc-900 text-white border border-zinc-800 shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
+              <div className="lg:col-span-5 lg:self-center p-6 sm:p-7 rounded-[4px] bg-zinc-900 text-white border border-zinc-800 shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
                 <div className="flex flex-col gap-5">
                   <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
                     <div className="flex items-center gap-2.5">
@@ -705,7 +705,7 @@ export default function ExpressBooking({
                         WALK-IN SERVICE PASS
                       </span>
                     </div>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#eb0028]/15 text-[#eb0028] border border-[#eb0028]/30 uppercase tracking-wider">
+                    <span className="text-[11px] font-mono font-bold text-[#eb0028] uppercase tracking-wider">
                       {currentCategory}
                     </span>
                   </div>
