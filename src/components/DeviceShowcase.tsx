@@ -7,6 +7,7 @@ interface DeviceCard {
   name: string;
   image: string;
   categoryTag: string;
+  categoryName?: string;
 }
 
 const midDevices: DeviceCard[] = [
@@ -15,12 +16,14 @@ const midDevices: DeviceCard[] = [
     name: "OnePlus Open",
     image: "/images/oneplus_open_foldable.jpg",
     categoryTag: "Screen & Display Replacement",
+    categoryName: "Mobile",
   },
   {
     id: "nord",
     name: "Nord Series",
     image: "/images/oneplus_nord_card.jpg",
     categoryTag: "Battery Replacement",
+    categoryName: "Mobile",
   },
 ];
 
@@ -29,30 +32,33 @@ const squareDevices: DeviceCard[] = [
     id: "earbuds",
     name: "Earbuds",
     image: "/images/oneplus_buds_card.jpg",
-    categoryTag: "General Service & Internal Cleaning",
+    categoryTag: "Earbud Battery Replacement",
+    categoryName: "Earbuds",
   },
   {
     id: "tablets",
     name: "Tablets",
     image: "/images/oneplus_pad_card.jpg",
-    categoryTag: "Screen & Display Replacement",
+    categoryTag: "Tablet Screen & Glass Replacement",
+    categoryName: "Tablet",
   },
   {
     id: "watches",
     name: "Watches",
     image: "/images/oneplus_watch_card.jpg",
-    categoryTag: "Battery Replacement",
+    categoryTag: "Watch AMOLED Display Replacement",
+    categoryName: "Watches",
   },
 ];
 
 interface DeviceShowcaseProps {
-  onSelectDevice?: (issue: string) => void;
+  onSelectDevice?: (issue: string, category?: string) => void;
 }
 
 export default function DeviceShowcase({ onSelectDevice }: DeviceShowcaseProps) {
-  const handleVisit = (issue?: string) => {
+  const handleVisit = (issue?: string, category?: string) => {
     if (issue && onSelectDevice) {
-      onSelectDevice(issue);
+      onSelectDevice(issue, category);
     }
     const bookingSection = document.getElementById("express-booking");
     if (bookingSection) {
@@ -88,7 +94,7 @@ export default function DeviceShowcase({ onSelectDevice }: DeviceShowcaseProps) 
         {/* CARD 1: FLAGSHIPS (Separate Standalone Vertical Rectangle Card)            */}
         {/* ========================================================================= */}
         <div
-          onClick={() => handleVisit("Screen & Display Replacement")}
+          onClick={() => handleVisit("Screen & Display Replacement", "Mobile")}
           className="col-span-2 sm:col-span-3 lg:col-span-3 lg:row-span-2 min-h-[220px] sm:min-h-[360px] lg:min-h-[490px] group relative rounded-2xl overflow-hidden bg-zinc-950 cursor-pointer border border-zinc-200/80 shadow-xs hover:shadow-2xl hover:border-[#eb0028] transition-all duration-300 flex flex-col justify-end p-4 sm:p-6"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -111,7 +117,7 @@ export default function DeviceShowcase({ onSelectDevice }: DeviceShowcaseProps) 
         {/* TEXT: Introduction & Overview (Gracefully Fills Vertical Space)           */}
         {/* ========================================================================= */}
         <div
-          onClick={() => handleVisit()}
+          onClick={() => handleVisit(undefined, "Mobile")}
           className="col-span-2 sm:col-span-3 lg:col-span-5 lg:row-span-2 min-h-0 sm:min-h-[360px] lg:min-h-[490px] flex flex-col justify-center p-2 sm:p-4 lg:px-2 lg:py-2 cursor-pointer space-y-4 sm:space-y-6"
         >
           <p className="text-sm sm:text-lg lg:text-[22px] xl:text-[24px] font-normal leading-[1.6] sm:leading-[1.62] text-zinc-800 tracking-[-0.01em]">
@@ -119,7 +125,7 @@ export default function DeviceShowcase({ onSelectDevice }: DeviceShowcaseProps) 
             <strong className="text-zinc-950 font-bold">
               <span className="text-[#eb0028]">ONE PLUS</span> SERVICE CENTER
             </strong>
-            , your reliable destination for professional OnePlus mobile, tablet, and laptop repair services.
+            , your reliable destination for professional OnePlus mobile, tablet, earbuds, and watches repair services.
           </p>
           <p className="text-xs sm:text-base lg:text-[18px] xl:text-[20px] font-normal leading-[1.65] sm:leading-[1.7] text-zinc-600">
             Whether your device has a broken display, battery issues, charging problems, motherboard faults, or water damage, our skilled technicians diagnose and repair it efficiently. Most repairs are completed within <span className="text-[#eb0028] font-bold">2 hours</span> with same-day service available.
@@ -132,7 +138,7 @@ export default function DeviceShowcase({ onSelectDevice }: DeviceShowcaseProps) 
         {midDevices.map((device) => (
           <div
             key={device.id}
-            onClick={() => handleVisit(device.categoryTag)}
+            onClick={() => handleVisit(device.categoryTag, device.categoryName)}
             className="col-span-1 sm:col-span-3 lg:col-span-4 min-h-[150px] sm:min-h-[220px] lg:min-h-[230px] group relative rounded-2xl overflow-hidden bg-zinc-950 cursor-pointer border border-zinc-200/80 shadow-xs hover:shadow-2xl hover:border-[#eb0028] transition-all duration-300 flex flex-col justify-end p-3.5 sm:p-6"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -161,7 +167,7 @@ export default function DeviceShowcase({ onSelectDevice }: DeviceShowcaseProps) 
           {squareDevices.map((device) => (
             <div
               key={device.id}
-              onClick={() => handleVisit(device.categoryTag)}
+              onClick={() => handleVisit(device.categoryTag, device.categoryName)}
               className="aspect-square lg:col-span-4 group relative rounded-xl sm:rounded-2xl overflow-hidden bg-zinc-950 cursor-pointer border border-zinc-200/80 shadow-xs hover:shadow-2xl hover:border-[#eb0028] transition-all duration-300 flex flex-col justify-end p-2.5 sm:p-5 lg:p-6"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}

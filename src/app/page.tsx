@@ -13,15 +13,26 @@ import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
-  const [selectedIssue, setSelectedIssue] = useState<string>("Broken Glass / Display");
+  const [selectedCategory, setSelectedCategory] = useState<string>("Mobile");
+  const [selectedIssue, setSelectedIssue] = useState<string>("Screen & Display Replacement");
 
   const handleSelectService = (service: RepairService) => {
+    setSelectedCategory("Mobile");
     if (service.chipMatch) {
       setSelectedIssue(service.chipMatch);
     }
     const bookingSection = document.getElementById("express-booking");
     if (bookingSection) {
       bookingSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleSelectDevice = (issue?: string, category?: string) => {
+    if (category) {
+      setSelectedCategory(category);
+    }
+    if (issue) {
+      setSelectedIssue(issue);
     }
   };
 
@@ -36,11 +47,13 @@ export default function Home() {
         {/* Remaining Sections: Covering 80% space in desktop from left and right */}
         <div className="w-full lg:w-[80%] mx-auto flex flex-col">
           {/* OnePlus Devices We Service */}
-          <DeviceShowcase onSelectDevice={(issue) => setSelectedIssue(issue)} />
+          <DeviceShowcase onSelectDevice={handleSelectDevice} />
           <TrustBenchmarks />
           <RepairCatalog onSelectService={handleSelectService} />
           <WorkshopFeed />
           <ExpressBooking
+            selectedCategory={selectedCategory}
+            onSelectCategory={setSelectedCategory}
             selectedIssue={selectedIssue}
             onSelectIssue={setSelectedIssue}
           />

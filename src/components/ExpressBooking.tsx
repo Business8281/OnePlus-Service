@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const issueChipsList = [
@@ -20,12 +20,313 @@ export const issueChipsList = [
   "General Service & Internal Cleaning",
 ];
 
+export interface ServiceOption {
+  value: string;
+  label: string;
+  turnaround?: string;
+}
+
+export interface CategoryConfig {
+  label: string;
+  placeholder: string;
+  defaultTurnaround: string;
+  defaultWarranty: string;
+  groups: {
+    groupLabel: string;
+    options: ServiceOption[];
+  }[];
+}
+
+export const CATEGORY_SERVICES: Record<string, CategoryConfig> = {
+  Mobile: {
+    label: "Mobile",
+    placeholder: "Enter your device (e.g. OnePlus 12, 11, Open, Nord 4, 10R)",
+    defaultTurnaround: "120 Minutes",
+    defaultWarranty: "90-Day Full",
+    groups: [
+      {
+        groupLabel: "Core Replacements",
+        options: [
+          {
+            value: "Screen & Display Replacement",
+            label: "OnePlus Screen & Display Replacement (120Hz Fluid AMOLED)",
+            turnaround: "120 Minutes",
+          },
+          {
+            value: "Battery Replacement",
+            label: "OnePlus Battery Replacement & Health Renewal",
+            turnaround: "45 Minutes",
+          },
+          {
+            value: "Back Glass Replacement",
+            label: "Back Glass & Housing Replacement",
+            turnaround: "60 Minutes",
+          },
+          {
+            value: "Charging Port Repair",
+            label: "Warp / SUPERVOOC USB-C Charging Port Repair",
+            turnaround: "60 Minutes",
+          },
+        ],
+      },
+      {
+        groupLabel: "Motherboard & Chip-Level",
+        options: [
+          {
+            value: "Motherboard Repair",
+            label: "Advanced Motherboard & BGA Chip-Level Repair",
+            turnaround: "Same-Day",
+          },
+          {
+            value: "Water Damage Repair",
+            label: "Liquid Ingress & Ultrasonic Board Recovery",
+            turnaround: "Same-Day",
+          },
+          {
+            value: "Power & Volume Button Repair",
+            label: "Power Key & Volume Rocker Flex Replacement",
+            turnaround: "45 Minutes",
+          },
+        ],
+      },
+      {
+        groupLabel: "Optics & Audio",
+        options: [
+          {
+            value: "Camera Repair & Replacement",
+            label: "Hasselblad & Front Camera Module Replacement",
+            turnaround: "90 Minutes",
+          },
+          {
+            value: "Speaker & Microphone Repair",
+            label: "Earpiece, Stereo Speaker & Mic Repair",
+            turnaround: "60 Minutes",
+          },
+        ],
+      },
+      {
+        groupLabel: "System & Diagnostics",
+        options: [
+          {
+            value: "Software Repair",
+            label: "OxygenOS Bootloop, Freeze & Firmware Flashing",
+            turnaround: "60 Minutes",
+          },
+          {
+            value: "Network, Wi-Fi & Bluetooth",
+            label: "5G Antenna, Wi-Fi 7 & Bluetooth IC Repair",
+            turnaround: "Same-Day",
+          },
+          {
+            value: "Fingerprint Sensor Repair",
+            label: "In-Display Optical Fingerprint Sensor Repair",
+            turnaround: "60 Minutes",
+          },
+          {
+            value: "Data Recovery",
+            label: "Critical Logic Board Data Recovery",
+            turnaround: "24-48 Hours",
+          },
+          {
+            value: "General Service & Internal Cleaning",
+            label: "Deep Internal Dust & Thermal Paste Cleaning",
+            turnaround: "45 Minutes",
+          },
+        ],
+      },
+    ],
+  },
+  Tablet: {
+    label: "Tablet",
+    placeholder: "Enter your tablet (e.g. OnePlus Pad 2, Pad Go, OnePlus Pad)",
+    defaultTurnaround: "2 - 3 Hours",
+    defaultWarranty: "90-Day Full",
+    groups: [
+      {
+        groupLabel: "Display & Battery",
+        options: [
+          {
+            value: "Tablet Screen & Glass Replacement",
+            label: "OnePlus Pad Display & Touch Glass Replacement (144Hz)",
+            turnaround: "2 Hours",
+          },
+          {
+            value: "Tablet Battery Replacement",
+            label: "OnePlus Pad Battery Replacement & Health Renewal",
+            turnaround: "90 Minutes",
+          },
+          {
+            value: "Tablet USB-C Charging Port Repair",
+            label: "67W SUPERVOOC USB-C Charging Port Repair",
+            turnaround: "60 Minutes",
+          },
+        ],
+      },
+      {
+        groupLabel: "Audio, Logic & Hardware",
+        options: [
+          {
+            value: "Tablet Motherboard Repair",
+            label: "Logic Board & Power Management IC Repair",
+            turnaround: "Same-Day",
+          },
+          {
+            value: "Tablet Quad Speaker Repair",
+            label: "Omni-Bearing Quad Speaker & Mic Repair",
+            turnaround: "90 Minutes",
+          },
+          {
+            value: "Tablet Stylus & Digitizer Repair",
+            label: "OnePlus Stylo & Digitizer Sensor Calibration",
+            turnaround: "60 Minutes",
+          },
+          {
+            value: "Tablet Water Damage Recovery",
+            label: "Liquid Ingress Ultrasonic Board Diagnostics",
+            turnaround: "Same-Day",
+          },
+          {
+            value: "Tablet Software & Bootloop Repair",
+            label: "OxygenOS Pad Firmware Recovery & System Fix",
+            turnaround: "60 Minutes",
+          },
+          {
+            value: "Tablet General Inspection",
+            label: "Internal Thermal Cleaning & Hardware Diagnostics",
+            turnaround: "45 Minutes",
+          },
+        ],
+      },
+    ],
+  },
+  Earbuds: {
+    label: "Earbuds",
+    placeholder: "Enter your earbuds (e.g. OnePlus Buds Pro 3, Buds 3, Nord Buds 3)",
+    defaultTurnaround: "45 Minutes",
+    defaultWarranty: "90-Day Full",
+    groups: [
+      {
+        groupLabel: "Battery & Case",
+        options: [
+          {
+            value: "Earbud Battery Replacement",
+            label: "Left / Right Earbud Battery Replacement",
+            turnaround: "45 Minutes",
+          },
+          {
+            value: "Charging Case Battery & Port Repair",
+            label: "Charging Case Battery & USB-C Port Repair",
+            turnaround: "45 Minutes",
+          },
+        ],
+      },
+      {
+        groupLabel: "Audio & Diagnostics",
+        options: [
+          {
+            value: "Low Volume & Sound Imbalance Fix",
+            label: "Low Volume, Distortion & Sound Imbalance Fix",
+            turnaround: "30 Minutes",
+          },
+          {
+            value: "ANC & Microphone Repair",
+            label: "Active Noise Cancellation (ANC) & Mic Repair",
+            turnaround: "45 Minutes",
+          },
+          {
+            value: "Bluetooth Pairing & Connection Fix",
+            label: "Bluetooth 5.4 Pairing & Connection Drop Fix",
+            turnaround: "30 Minutes",
+          },
+          {
+            value: "Acoustic Mesh Cleaning & Sanitization",
+            label: "Deep Acoustic Mesh Cleaning & Ultrasonic Sanitization",
+            turnaround: "30 Minutes",
+          },
+          {
+            value: "Firmware Flashing & Sync Reset",
+            label: "Earbuds Firmware Flash & Hardware Reset",
+            turnaround: "30 Minutes",
+          },
+          {
+            value: "Single Earbud Replacement & Pairing",
+            label: "Single Earbud Replacement & Case Pairing Sync",
+            turnaround: "20 Minutes",
+          },
+        ],
+      },
+    ],
+  },
+  Watches: {
+    label: "Watches",
+    placeholder: "Enter your watch (e.g. OnePlus Watch 2, Watch 2R, OnePlus Watch)",
+    defaultTurnaround: "60 Minutes",
+    defaultWarranty: "90-Day Full",
+    groups: [
+      {
+        groupLabel: "Display & Battery",
+        options: [
+          {
+            value: "Watch AMOLED Display Replacement",
+            label: "OnePlus Watch AMOLED Display & Glass Replacement",
+            turnaround: "60 Minutes",
+          },
+          {
+            value: "Watch Battery Replacement",
+            label: "Smartwatch Battery Replacement & Rapid Drain Fix",
+            turnaround: "45 Minutes",
+          },
+          {
+            value: "Magnetic Charging Dock Repair",
+            label: "Magnetic Fast-Charging Pin & Connector Repair",
+            turnaround: "45 Minutes",
+          },
+        ],
+      },
+      {
+        groupLabel: "Sensors & Chassis",
+        options: [
+          {
+            value: "Health Sensor Array Repair",
+            label: "Heart Rate, SpO2 & Sleep Sensor Repair",
+            turnaround: "60 Minutes",
+          },
+          {
+            value: "Crown & Side Button Repair",
+            label: "Rotary Crown & Push Button Flex Repair",
+            turnaround: "45 Minutes",
+          },
+          {
+            value: "Water Resistance Seal Restoration",
+            label: "5ATM / IP68 Water Resistance Seal Restoration",
+            turnaround: "60 Minutes",
+          },
+          {
+            value: "Wear OS System Crash & Sync Fix",
+            label: "Wear OS System Crash, Bootloop & Phone Sync Fix",
+            turnaround: "45 Minutes",
+          },
+          {
+            value: "Chassis & Strap Connector Repair",
+            label: "Stainless Steel Chassis & Lug Connector Repair",
+            turnaround: "45 Minutes",
+          },
+        ],
+      },
+    ],
+  },
+};
+
 interface ExpressBookingProps {
+  selectedCategory?: string;
+  onSelectCategory?: (category: string) => void;
   selectedIssue: string;
   onSelectIssue: (issue: string) => void;
 }
 
 export default function ExpressBooking({
+  selectedCategory = "Mobile",
+  onSelectCategory,
   selectedIssue,
   onSelectIssue,
 }: ExpressBookingProps) {
@@ -34,12 +335,44 @@ export default function ExpressBooking({
   const [phoneNumber, setPhoneNumber] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [bookingSuccess, setBookingSuccess] = useState<null | {
+    category: string;
     model: string;
     hub: string;
     issue: string;
     phone: string;
     name: string;
   }>(null);
+
+  const currentCategory = selectedCategory || "Mobile";
+  const categoryData =
+    CATEGORY_SERVICES[currentCategory] || CATEGORY_SERVICES["Mobile"];
+
+  // Ensure selected issue is valid for the current category
+  useEffect(() => {
+    const allOptions = categoryData.groups.flatMap((g) => g.options);
+    const hasMatch = allOptions.some((opt) => opt.value === selectedIssue);
+    if (!hasMatch && allOptions.length > 0) {
+      onSelectIssue(allOptions[0].value);
+    }
+  }, [currentCategory, categoryData, selectedIssue, onSelectIssue]);
+
+  const handleCategoryChange = (newCategory: string) => {
+    onSelectCategory?.(newCategory);
+    const newCatData = CATEGORY_SERVICES[newCategory];
+    if (newCatData && newCatData.groups[0]?.options[0]) {
+      onSelectIssue(newCatData.groups[0].options[0].value);
+    }
+  };
+
+  // Find turnaround time of selected issue or fall back to category default
+  let turnaroundTime = categoryData.defaultTurnaround;
+  for (const group of categoryData.groups) {
+    const match = group.options.find((opt) => opt.value === selectedIssue);
+    if (match && match.turnaround) {
+      turnaroundTime = match.turnaround;
+      break;
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,14 +382,22 @@ export default function ExpressBooking({
       return;
     }
 
-    const model = deviceModel.trim() || "OnePlus Device";
-    const name = customerName.trim() || "Walk-In Customer";
-    const issue = selectedIssue || "Screen & Display Replacement";
+    const cleanName = customerName.trim();
+    if (!cleanName) {
+      alert("Please enter your name.");
+      return;
+    }
+
+    const category = currentCategory;
+    const model = deviceModel.trim() || `OnePlus ${category}`;
+    const name = cleanName;
+    const issue = selectedIssue || categoryData.groups[0]?.options[0]?.value || "General Service";
     const hub = hubLocation;
 
     const messageText =
       `Hello ONE PLUS SERVICE CENTER,\n\n` +
       `I would like to schedule a Walk-in Visit:\n\n` +
+      `• Category: ${category}\n` +
       `• Device Model: ${model}\n` +
       `• Service Requirement: ${issue}\n` +
       `• Service Center Hub: ${hub}\n` +
@@ -67,6 +408,7 @@ export default function ExpressBooking({
     const whatsappUrl = `https://wa.me/917207207046?text=${encodeURIComponent(messageText)}`;
 
     setBookingSuccess({
+      category,
       model,
       hub,
       issue,
@@ -96,6 +438,7 @@ export default function ExpressBooking({
     ? encodeURIComponent(
         `Hello ONE PLUS SERVICE CENTER,\n\n` +
           `I would like to schedule a Walk-in Visit:\n\n` +
+          `• Category: ${bookingSuccess.category}\n` +
           `• Device Model: ${bookingSuccess.model}\n` +
           `• Service Requirement: ${bookingSuccess.issue}\n` +
           `• Service Center Hub: ${bookingSuccess.hub}\n` +
@@ -154,7 +497,11 @@ export default function ExpressBooking({
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-5 rounded-[4px] bg-white dark:bg-zinc-950/70 border border-zinc-200/80 dark:border-zinc-800/80 text-[13px]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 p-5 rounded-[4px] bg-white dark:bg-zinc-950/70 border border-zinc-200/80 dark:border-zinc-800/80 text-[13px]">
+                <div className="flex flex-col gap-1">
+                  <span className="text-zinc-400 text-[11px] font-mono uppercase">Category</span>
+                  <span className="font-bold text-zinc-900 dark:text-zinc-100">{bookingSuccess.category}</span>
+                </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-zinc-400 text-[11px] font-mono uppercase">Device Model</span>
                   <span className="font-bold text-zinc-900 dark:text-zinc-100">{bookingSuccess.model}</span>
@@ -200,26 +547,50 @@ export default function ExpressBooking({
                 onSubmit={handleSubmit}
                 className="lg:col-span-7 p-4 sm:p-8 rounded-xl sm:rounded-[4px] bg-zinc-50/90 dark:bg-zinc-900/60 border border-zinc-200/90 dark:border-white/[0.08] backdrop-blur-xl shadow-lg flex flex-col gap-4 sm:gap-5"
               >
-                {/* Device Model Text Input */}
+                {/* 1. Category Selector */}
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="categorySelect" className="text-[11px] sm:text-[12px] font-mono uppercase font-bold text-zinc-700 dark:text-zinc-300">
+                    1. Category
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="categorySelect"
+                      value={currentCategory}
+                      onChange={(e) => handleCategoryChange(e.target.value)}
+                      className="w-full h-11 pl-3.5 pr-10 bg-white dark:bg-zinc-800/90 rounded-[4px] text-zinc-900 dark:text-zinc-100 text-[16px] sm:text-[13.5px] font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#eb0028] border border-zinc-300 dark:border-zinc-700/80 transition-all cursor-pointer"
+                      required
+                    >
+                      <option value="Mobile">Mobile</option>
+                      <option value="Tablet">Tablet</option>
+                      <option value="Earbuds">Earbuds</option>
+                      <option value="Watches">Watches</option>
+                    </select>
+                    <span className="material-symbols-outlined absolute right-3.5 top-3 pointer-events-none text-zinc-400 text-[20px]">
+                      expand_more
+                    </span>
+                  </div>
+                </div>
+
+                {/* 2. Device Model Text Input */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="deviceModel" className="text-[11px] sm:text-[12px] font-mono uppercase font-bold text-zinc-700 dark:text-zinc-300">
-                    1. Device Model
+                    2. Device Model
                   </label>
                   <input
                     type="text"
                     id="deviceModel"
                     value={deviceModel}
                     onChange={(e) => setDeviceModel(e.target.value)}
-                    placeholder="Enter your device (e.g. OnePlus 12, Nord, Pad, Buds)"
+                    placeholder={categoryData.placeholder}
                     className="w-full h-11 px-3.5 bg-white dark:bg-zinc-800/90 rounded-[4px] text-zinc-900 dark:text-zinc-100 text-[16px] sm:text-[13.5px] font-medium placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-[#eb0028] focus:border-[#eb0028] border border-zinc-300 dark:border-zinc-700/80 transition-all"
                     required
                   />
                 </div>
 
-                {/* Service Requirement Selector */}
+                {/* 3. Service Requirement Selector */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="selectedIssue" className="text-[12px] font-mono uppercase font-bold text-zinc-700 dark:text-zinc-300">
-                    2. Service Requirement
+                    3. Service Requirement
                   </label>
                   <div className="relative">
                     <select
@@ -229,28 +600,15 @@ export default function ExpressBooking({
                       className="w-full h-11 pl-3.5 pr-10 bg-white dark:bg-zinc-800/90 rounded-[4px] text-zinc-900 dark:text-zinc-100 text-[16px] sm:text-[13.5px] font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#eb0028] border border-zinc-300 dark:border-zinc-700/80 transition-all cursor-pointer"
                       required
                     >
-                      <optgroup label="Core Replacements">
-                        <option value="Screen & Display Replacement">OnePlus Screen &amp; Display Replacement (120Hz Fluid AMOLED)</option>
-                        <option value="Battery Replacement">OnePlus Battery Replacement &amp; Health Renewal</option>
-                        <option value="Back Glass Replacement">Back Glass &amp; Housing Replacement</option>
-                        <option value="Charging Port Repair">Warp / SUPERVOOC USB-C Charging Port Repair</option>
-                      </optgroup>
-                      <optgroup label="Motherboard &amp; Chip-Level">
-                        <option value="Motherboard Repair">Advanced Motherboard &amp; BGA Chip-Level Repair</option>
-                        <option value="Water Damage Repair">Liquid Ingress &amp; Ultrasonic Board Recovery</option>
-                        <option value="Power & Volume Button Repair">Power Key &amp; Volume Rocker Flex Replacement</option>
-                      </optgroup>
-                      <optgroup label="Optics &amp; Audio">
-                        <option value="Camera Repair & Replacement">Hasselblad &amp; Front Camera Module Replacement</option>
-                        <option value="Speaker & Microphone Repair">Earpiece, Stereo Speaker &amp; Mic Repair</option>
-                      </optgroup>
-                      <optgroup label="System &amp; Diagnostics">
-                        <option value="Software Repair">OxygenOS Bootloop, Freeze &amp; Firmware Flashing</option>
-                        <option value="Network, Wi-Fi & Bluetooth">5G Antenna, Wi-Fi 7 &amp; Bluetooth IC Repair</option>
-                        <option value="Fingerprint Sensor Repair">In-Display Optical Fingerprint Sensor Repair</option>
-                        <option value="Data Recovery">Critical Logic Board Data Recovery</option>
-                        <option value="General Service & Internal Cleaning">Deep Internal Dust &amp; Thermal Paste Cleaning</option>
-                      </optgroup>
+                      {categoryData.groups.map((group) => (
+                        <optgroup key={group.groupLabel} label={group.groupLabel}>
+                          {group.options.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
                     </select>
                     <span className="material-symbols-outlined absolute right-3.5 top-3 pointer-events-none text-zinc-400 text-[20px]">
                       expand_more
@@ -258,10 +616,10 @@ export default function ExpressBooking({
                   </div>
                 </div>
 
-                {/* Service Center Hub */}
+                {/* 4. Service Center Hub */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="hubLocation" className="text-[12px] font-mono uppercase font-bold text-zinc-700 dark:text-zinc-300">
-                    3. Hyderabad Service Center
+                    4. Hyderabad Service Center
                   </label>
                   <div className="relative">
                     <select
@@ -284,11 +642,11 @@ export default function ExpressBooking({
                   </div>
                 </div>
 
-                {/* Contact Inputs */}
+                {/* 5. Contact Inputs */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="customerName" className="text-[12px] font-mono uppercase font-bold text-zinc-700 dark:text-zinc-300">
-                      4. Your Name (Optional)
+                      5. Your Name *
                     </label>
                     <input
                       id="customerName"
@@ -297,12 +655,13 @@ export default function ExpressBooking({
                       onChange={(e) => setCustomerName(e.target.value)}
                       placeholder="e.g. Rahul Sharma"
                       className="w-full h-11 px-3.5 bg-white dark:bg-zinc-800/90 rounded-[4px] text-zinc-900 dark:text-zinc-100 text-[16px] sm:text-[13.5px] focus:outline-none focus:ring-1 focus:ring-[#eb0028] border border-zinc-300 dark:border-zinc-700/80 transition-all placeholder:text-zinc-400"
+                      required
                     />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor="userPhone" className="text-[12px] font-mono uppercase font-bold text-zinc-700 dark:text-zinc-300">
-                      5. Mobile Number *
+                      6. Mobile Number *
                     </label>
                     <div className="relative">
                       <span className="absolute left-3.5 top-2.5 text-zinc-500 font-mono text-[13px] font-bold select-none">
@@ -346,17 +705,31 @@ export default function ExpressBooking({
                         WALK-IN SERVICE PASS
                       </span>
                     </div>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#eb0028]/15 text-[#eb0028] border border-[#eb0028]/30 uppercase tracking-wider">
+                      {currentCategory}
+                    </span>
                   </div>
 
                   <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-[10.5px] font-mono text-zinc-500 uppercase tracking-wider">Category</span>
+                        <span className="text-[14px] font-bold text-zinc-100">{currentCategory}</span>
+                      </div>
+                    </div>
+
                     <div className="flex flex-col">
                       <span className="text-[10.5px] font-mono text-zinc-500 uppercase tracking-wider">Device Assigned</span>
-                      <span className="text-[14px] font-bold text-zinc-100">{deviceModel.trim() || "Enter Device Model"}</span>
+                      <span className="text-[14px] font-bold text-zinc-100">
+                        {deviceModel.trim() || "Enter Device Model"}
+                      </span>
                     </div>
 
                     <div className="flex flex-col">
                       <span className="text-[10.5px] font-mono text-zinc-500 uppercase tracking-wider">Requested Service</span>
-                      <span className="text-[14px] font-bold text-[#eb0028]">{selectedIssue || "Screen & Display Replacement"}</span>
+                      <span className="text-[14px] font-bold text-[#eb0028] leading-snug">
+                        {selectedIssue || categoryData.groups[0]?.options[0]?.value || "Screen & Display Replacement"}
+                      </span>
                     </div>
 
                     <div className="flex flex-col">
@@ -368,11 +741,11 @@ export default function ExpressBooking({
                   <div className="grid grid-cols-2 gap-3 pt-4 border-t border-zinc-800 text-[12px]">
                     <div className="p-3 rounded-[4px] bg-zinc-800/60 border border-zinc-700/60 flex flex-col">
                       <span className="text-[10px] font-mono text-zinc-400 uppercase">Avg Turnaround</span>
-                      <span className="font-bold text-white text-[13px]">120 Minutes</span>
+                      <span className="font-bold text-white text-[13px]">{turnaroundTime}</span>
                     </div>
                     <div className="p-3 rounded-[4px] bg-zinc-800/60 border border-zinc-700/60 flex flex-col">
                       <span className="text-[10px] font-mono text-zinc-400 uppercase">Warranty Guarantee</span>
-                      <span className="font-bold text-white text-[13px]">90-Day Full</span>
+                      <span className="font-bold text-white text-[13px]">{categoryData.defaultWarranty}</span>
                     </div>
                   </div>
                 </div>
