@@ -10,14 +10,21 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-zinc-200 dark:border-zinc-800">
           {/* Column 1: Brand & Contact */}
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-[#eb0028] text-white font-extrabold text-[12px] flex items-center justify-center">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="flex items-center gap-2 group cursor-pointer w-fit outline-none"
+            >
+              <div className="w-6 h-6 rounded bg-[#eb0028] group-hover:bg-[#cf0023] text-white font-extrabold text-[12px] flex items-center justify-center transition-colors">
                 1+
               </div>
-              <span className="font-bold text-[14px] text-zinc-900 dark:text-white uppercase tracking-tight">
+              <span className="font-bold text-[14px] text-zinc-900 dark:text-white uppercase tracking-tight group-hover:text-[#eb0028] transition-colors">
                 ONE PLUS SERVICE CENTER
               </span>
-            </div>
+            </a>
             <p className="text-[12px] leading-relaxed text-zinc-500 dark:text-zinc-400">
               Professional OnePlus mobile, tablet, and laptop repair services across Hyderabad - LB Nagar &amp; Tarnaka Secunderabad.
             </p>
@@ -37,12 +44,27 @@ export default function Footer() {
               OnePlus Services
             </span>
             <ul className="flex flex-col gap-1.5 text-[12px]">
-              <li>Screen &amp; Display Replacement</li>
-              <li>Battery Life Replacement</li>
-              <li>Charging Port Repair</li>
-              <li>Motherboard &amp; Chip-Level Repair</li>
-              <li>Camera Sensor Replacement</li>
-              <li>Water Damage Restoration</li>
+              {[
+                "Screen & Display Replacement",
+                "Battery Life Replacement",
+                "Charging Port Repair",
+                "Motherboard & Chip-Level Repair",
+                "Camera Sensor Replacement",
+                "Water Damage Restoration",
+              ].map((serviceName) => (
+                <li key={serviceName}>
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="hover:text-[#eb0028] text-zinc-600 dark:text-zinc-400 hover:underline transition-colors cursor-pointer text-left outline-none block"
+                  >
+                    {serviceName}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -78,25 +100,26 @@ export default function Footer() {
 
         {/* Bottom Legal & Trademark Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-zinc-500">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 text-center sm:text-left">
-            <span>
-              © 2026 ONE PLUS SERVICE CENTER. All rights reserved.
-            </span>
-            <span className="hidden sm:inline text-zinc-300 dark:text-zinc-700">|</span>
-            <span>
-              Developed by{" "}
-              <a
-                href="https://xrmarketing.in"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-zinc-700 dark:text-zinc-300 hover:text-[#eb0028] dark:hover:text-[#eb0028] underline underline-offset-2 transition-colors"
-              >
-                XRmarketing
-              </a>
-            </span>
-          </div>
-          <p className="text-[11px] max-w-md text-center sm:text-right">
-            Professional third-party repair center specializing in OnePlus devices. OnePlus is a registered trademark of OnePlus Technology.
+          <p className="text-center sm:text-left">
+            © 2026{" "}
+            <a
+              href="https://oneplusservice.center"
+              className="text-[#eb0028] font-medium no-underline hover:text-[#cf0023] transition-colors"
+            >
+              oneplusservice.center
+            </a>{" "}
+            . All rights reserved.
+          </p>
+          <p className="text-center sm:text-right">
+            Developed by{" "}
+            <a
+              href="https://xrmarketing.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-zinc-700 dark:text-zinc-300 hover:text-[#eb0028] dark:hover:text-[#eb0028] underline underline-offset-2 transition-colors"
+            >
+              XRmarketing
+            </a>
           </p>
         </div>
       </div>
