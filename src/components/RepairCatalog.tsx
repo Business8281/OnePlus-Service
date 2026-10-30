@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface RepairService {
@@ -164,9 +164,17 @@ export const servicesData: RepairService[] = [
 export default function RepairCatalog({ onSelectService }: RepairCatalogProps) {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const handleCardClick = (service: RepairService) => {
-    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+    if (isMobile) {
       setExpandedCardId((prev) => (prev === service.id ? null : service.id));
     } else {
       onSelectService(service);
@@ -300,7 +308,7 @@ export default function RepairCatalog({ onSelectService }: RepairCatalogProps) {
                   </div>
                 </div>
 
-                {/* BAND 2: Obsidian Mid-Band with Bold Title & Mobile Expand Indicator */}
+                {/* BAND 2: Obsidian Mid-Band with Bold Title */}
                 <div className="relative bg-zinc-950 px-4 sm:px-5 pt-3 pb-6 text-white flex flex-col justify-between">
                   <div className="flex items-center justify-between gap-2">
                     <h3
@@ -310,13 +318,15 @@ export default function RepairCatalog({ onSelectService }: RepairCatalogProps) {
                     >
                       {service.title}
                     </h3>
-                    <span
-                      className={`lg:hidden material-symbols-outlined text-[19px] transition-transform duration-300 shrink-0 ${
-                        isExpanded ? "rotate-180 text-[#eb0028]" : "text-zinc-400"
-                      }`}
-                    >
-                      expand_more
-                    </span>
+                    {isMobile && (
+                      <span
+                        className={`material-symbols-outlined text-[19px] transition-transform duration-300 shrink-0 ${
+                          isExpanded ? "rotate-180 text-[#eb0028]" : "text-zinc-400"
+                        }`}
+                      >
+                        expand_more
+                      </span>
+                    )}
                   </div>
 
                   {/* Sharp Diagonal Slant dividing Obsidian Mid-Band & White Base (Seamless without red line) */}
@@ -351,32 +361,36 @@ export default function RepairCatalog({ onSelectService }: RepairCatalogProps) {
 
                     <div className="flex items-center">
                       {/* Desktop View Action: hover reveals description, clicking card or text books */}
-                      <span className="hidden lg:flex text-[#eb0028] font-bold items-center gap-1 whitespace-nowrap group-hover:translate-x-1 transition-transform">
-                        <span>Book Walk-in</span>
-                        <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
-                      </span>
+                      {!isMobile && (
+                        <span className="text-[#eb0028] font-bold flex items-center gap-1 whitespace-nowrap group-hover:translate-x-1 transition-transform">
+                          <span>Book Walk-in</span>
+                          <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+                        </span>
+                      )}
 
                       {/* Mobile View Action: Toggles between "View Details ▾" and dedicated "Book Walk-in →" button */}
-                      <div className="lg:hidden">
-                        {isExpanded ? (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onSelectService(service);
-                            }}
-                            className="px-3 py-1.5 rounded-[4px] bg-[#eb0028] hover:bg-black text-white font-bold text-[11px] tracking-wide flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
-                          >
-                            <span>Book Walk-in</span>
-                            <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
-                          </button>
-                        ) : (
-                          <span className="text-[#eb0028] font-bold flex items-center gap-0.5 text-[11.5px]">
-                            <span>View Details</span>
-                            <span className="material-symbols-outlined text-[16px]">expand_more</span>
-                          </span>
-                        )}
-                      </div>
+                      {isMobile && (
+                        <div>
+                          {isExpanded ? (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onSelectService(service);
+                              }}
+                              className="px-3 py-1.5 rounded-[4px] bg-[#eb0028] hover:bg-black text-white font-bold text-[11px] tracking-wide flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
+                            >
+                              <span>Book Walk-in</span>
+                              <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+                            </button>
+                          ) : (
+                            <span className="text-[#eb0028] font-bold flex items-center gap-0.5 text-[11.5px]">
+                              <span>View Details</span>
+                              <span className="material-symbols-outlined text-[16px]">expand_more</span>
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
